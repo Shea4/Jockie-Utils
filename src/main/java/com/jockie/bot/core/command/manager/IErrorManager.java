@@ -14,13 +14,17 @@ import net.dv8tion.jda.internal.entities.GuildImpl;
 public interface IErrorManager {
 	
 	/**
-	 * @param argument the argument which was parsed incorrectly
+	 * @param type the class which was parsed incorrectly
 	 * @param message the message which was parsed
 	 * @param content the content which was parsed as the argument incorrectly
 	 * 
 	 * @return whether or not it was handled
 	 */
-	public boolean handle(@Nonnull IArgument<?> argument, @Nonnull Message message, @Nonnull String content);
+	public boolean handle(@Nonnull Class<?> type, @Nonnull Message message, @Nonnull String content);
+
+	default boolean handle(@Nonnull IArgument<?> argument, @Nonnull Message message, @Nonnull String content) {
+		return this.handle(argument.getType(), message, content);
+	}
 	
 	/**
 	 * Register a response for the error handler

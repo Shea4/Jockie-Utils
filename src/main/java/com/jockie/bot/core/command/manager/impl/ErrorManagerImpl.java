@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.jockie.bot.core.argument.IArgument;
+import com.jockie.bot.core.argument.impl.ArgumentImpl;
 import com.jockie.bot.core.command.manager.IErrorManager;
 import com.jockie.bot.core.utility.CommandUtility;
 import com.jockie.bot.core.utility.function.TriConsumer;
@@ -20,15 +21,15 @@ public class ErrorManagerImpl implements IErrorManager {
 	
 	protected Set<Class<?>> handleInheritance = new LinkedHashSet<>();
 	protected Map<Class<?>, Class<?>> inheritanceCache = new HashMap<>();
-	
+
 	@Override
-	public boolean handle(IArgument<?> argument, Message message, String content) {
-		Checks.notNull(argument, "argument");
+	public boolean handle(Class<?> type, Message message, String content) {
+		Checks.notNull(type, "type");
 		Checks.notNull(message, "message");
 		Checks.notNull(content, "content");
-		
-		Class<?> type = argument.getType();
-		
+
+		IArgument<?> argument = new ArgumentImpl.Builder<>(type).build();
+
 		if(this.consumers.containsKey(type)) {
 			this.consumers.get(type).accept(argument, message, content);
 			
